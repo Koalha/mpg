@@ -1,0 +1,114 @@
+---
+title: Modelling in Physical Geography
+subtitle: Introduction to R scripting - Day 1
+output: ioslides_presentation
+---
+
+## Course info
+- Course runs from 30.10–30.11.
+- Classes from Monday till Thursday, 12.15–16.00 in computer room Physicum C108
+- Monday–Wednesday: lectures and practicals
+- Thursday: Independent work, teacher present part of the time
+- Project work and Seminar
+- Exam
+
+## Structure of Classes
+### First Week: Basics of R
+### Second Week: Basic statistical methods
+### Third week: Advanced  methods
+
+# Day 1
+
+## Scripting vs. Point-And-Click
+```{r, out.width="800px", echo = FALSE}
+knitr::include_graphics("pointclick.png")
+```
+
+## Scripting vs. Point-And-Click
+```{r, out.width="800px", echo = FALSE}
+knitr::include_graphics("scripting.png")
+```
+
+## Advantages of writing scripts
+1. Reproducibility
+2. Reusability
+3. Automation of repetitive tasks
+
+# There is no replacement for writing code yourself
+
+## There is no replacement for writing code yourself
+Writing code enables your brain to connect what you are trying to do to the code you are writing.
+
+NEVER copy-paste code from materials to your scripts. ALWAYS type.
+
+There are multiple ways of doing things. We encourage you to explore them.
+
+<div class="notes">
+What this means is that we don't always teach the most effective way of doing things, because first you have to learn the basics. 
+</div>
+
+
+##
+```{r echo=FALSE, out.width="700px"}
+knitr::include_graphics("Rlogo.svg")
+```
+
+##  What is R?
+- Programming language
+- Environment for statistical computations
+- Free software
+- Our tool
+
+## Success of R
+```{r, echo = FALSE, out.width="800px"}
+d <- data.frame(Year = 2011:2016,
+                Citations = c(1230,1950,5130,11700,20200,32000),
+                Packages = c(912,1150,1330,1604,1832,2258))
+par(mfrow = c(1,2), cex=0.75)
+plot(Citations~Year, data = d,type = "l",main = "New citations of R", axes = FALSE, xlab = "", ylim = c(0,30000),ylab = "")
+axis(1,at = d$Year, labels = d$Year, las = 2)
+axis(2,at = c(0,10000,20000,30000), las = 2)
+plot(Packages~Year, data = d,type = "l",main = "New packages accepted to CRAN", axes = FALSE, ylim = c(0,3000), xlab = "", ylab = "")
+axis(1,at = d$Year, labels = d$Year, las = 2)
+axis(2,at = c(0,750,1500,2250,3000), las = 2)
+```
+
+## Success of R
+- Collaborative development from researchers to researchers
+- Free, available on all systems and personal computers
+- Ever expanding ecosystem of general-use and discipline-specific packages
+
+## Exercises today
+- Getting to know R and RStudio
+- Writing and organizing scripts
+- Attaching packages to gain new functionality
+- Learning about different data types
+- Running simple calculations in R
+- Creating, studying, and manipulating objects
+- Where to find help
+
+# Day 2 
+- COMMENTING
+- Packages
+- Function calls
+- ? & ?? & stack overflow
+- Data types
+- NA,NaN,NULL,Inf
+- str
+- Calculations
+- How to store data
+- Reading data to R
+- For loops & apply
+- Logical tests
+- if, if else, ifelse
+- Assign functions
+- Means, medians, standard deviations, 
+- Bootstrap confidence estimation
+- Plotting
+- Lines, points, bars, boxplots, histograms, density plots
+- Graphical parameters
+- Exporting graphics
+- Read data to R
+- Augment a data.frame
+- Calculate and present summary statistics
+- Quantify and compare variation

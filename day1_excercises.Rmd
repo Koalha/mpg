@@ -1,0 +1,40 @@
+---
+title: Modelling in Physical Geography
+subtitle: Excercise 1
+author: Konsta Happonen
+output: pdf_document
+---
+
+# Getting to know R and RStudio
+We use the graphical user interface RStudio to interact with R. The default interface is divided into four windows: scripting window, command line, environment window and graphics window \(figure \ref{fig:rstudio}).
+We write our code into the scripting window. When we execute the code, it is sent to the command line/console. The console is also where R prints any messages or errors your commands may invoke. The environment window lists all objects you might have created with your code. Finally, the graphics window is where the results of plotting commands are displayed by default.
+
+\begin{figure}[!htp]
+\includegraphics[width=\textwidth]{scripting_2.png}
+\caption{The RStudio default interface is divided into 4 windows.}
+\label{fig:rstudio}
+\end{figure}
+
+To see how this layout works, write these few lines of code into the scripting window. DO NOT COPY AND PASTE. Typing is a much more effective way of learning how to code.
+
+```{r}
+## A few lines of code to demonstrate the layout of RStudio
+x <- 1:5 # assign a vector of values 1 through 5 to an object named x
+y <- c(1,2,3,4,5) # same for y
+plot(x,y) # plot the relationship of x and y
+```
+
+You execute the code line-by-line with Ctrl+Return. You can also highlight the entire script and execute it with Ctrl+Return. You should see the code being sent to the command line, and a plot similar to above appearing in the graphics window. 
+
+# Writing and organizing scripts
+NEVER SAVE YOUR WORKSPACE.
+
+# Attaching packages to gain new functionality
+
+# Learning about different data types
+
+# Running simple calculations in R
+
+# Creating, studying, and manipulating objects
+
+# Where to find help
