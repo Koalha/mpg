@@ -2,7 +2,10 @@
 title: Modelling in Physical Geography
 subtitle: Excercise 1
 author: Konsta Happonen
-output: pdf_document
+output:
+    pdf_document:
+        fig_caption: true
+        highlight: zenburn
 ---
 
 # Getting to know R and RStudio
@@ -17,24 +20,195 @@ We write our code into the scripting window. When we execute the code, it is sen
 
 To see how this layout works, write these few lines of code into the scripting window. DO NOT COPY AND PASTE. Typing is a much more effective way of learning how to code.
 
-```{r}
+```{r fig.cap = "Output of the command \\texttt{plot}\\label{block1}"}
 ## A few lines of code to demonstrate the layout of RStudio
-x <- 1:5 # assign a vector of values 1 through 5 to an object named x
-y <- c(1,2,3,4,5) # same for y
-plot(x,y) # plot the relationship of x and y
+a <- c(1,2,3,4,5) # assign a vector of values 1 through 5 to an object named a
+b <- 1:5 # same for b
+plot(x=x,y=y) # plot the relationship of a and b
 ```
 
-You execute the code line-by-line with Ctrl+Return. You can also highlight the entire script and execute it with Ctrl+Return. You should see the code being sent to the command line, and a plot similar to above appearing in the graphics window. 
+You execute the code line-by-line with Ctrl+Return. You can also highlight the entire script and execute it with Ctrl+Return. You should see the code being sent to the command line, and a plot similar to above appearing in the graphics window. The above code also demonstrates that there are multiple ways to perform even simple operations. A vector of digits 1–5 can be created both with the commad `1:5` and `c(1,2,3,4,5)`. In addition, the command `seq(from=1,to=5)` would work as well. Just as you can convey the same message in many different ways using natural language, you can achieve the same analysis result with very different lines of code. This flexibility makes the programmatic approach to data analysis very powerful, but also makes it crucial that you arrange and document your code properly.
 
-# Writing and organizing scripts
-NEVER SAVE YOUR WORKSPACE.
+# Commenting
+The first thing to learn is that always, ALWAYS comment your scripts. Look at the previous code block. The first row begins with a `#`. This is a sign to the command line not to execute anything on this line. This is called a comment. You can also start a comment mid-line; this is demonstrated on the last three lines.
+
+The aim of commenting is to make the code human-readable. It is much easier to return back to your code when you've written comments that explain what each command is doing. There is no universally accepted right amount of commenting, but too many comments is better than too few. Take a habit of commenting everything you code until you know what each command does by heart.
+
+# Anatomy of R commands
+Most R commands are called by writing the function name followed by brackets. If the function takes any *arguments*, they are written between the brackets. For example, in the command `plot(x=a,y=b)`, the objects `a` and `b` are given as arguments to the function `plot()`. To see what arguments a function can take, you can type `?function_name` on the command line, for example `?plot`.
+
+A major expetion is the assignment arrow `<-`. It is used to create new objects. On the left-hand side you write the name of the object you are creating (or updating), and on the right-hand side you put what ever you want to put in your new object. We already used the assignment arrow twice in the above piece of code (`a <- c(1,2,3,4,5)`).
+
+# Working directory
+The directory R runs in is called the working directory. This is where R searches for and saves any files you read or write by default. It is a good idea to run each project you start in their own directory. That way any results and figures you create will automatically be associated with the code it was made with.
+
+Let us now create a new directory, and set it as our working directory. You can check your current working directory with the command `getwd()`. Then, create a new subdirectory called `"excercise_1"`. The quotes are important, otherwise R would search for an object named `excercise_1`. Next, set the new subdirectory as your working directory with `setwd()`.
+
+```{r eval = FALSE}
+getwd() # what is your current working directory?
+dir.create("excercise_1") # create directory excercise_1, remember the quotes!
+setwd("excercise_1") # set working directory.
+```
+
+# Data types
+We will now go over the most important data types in R: integer, numeric, character, logical, and factor.
+
+
+## Integer and numeric
+We have already created one numeric and one integer object. You can check the type and structure of objects wit the command `str()`
+
+```{r}
+str(a) # print the structure of a
+str(b)
+```
+
+The only meaningful difference between the numeric and integer types is that integers cannot have decimals, and thus consume less memory.
+
+## Character
+Character objects are used to store text. The text must be quoted, otherwise R will search for an object with that name. You can use the command `paste()` to bind pieces of text together into one character string. Try it now.
+
+```{r}
+a
+"a"
+str("a")
+text1 <- "Hello"
+text2 <- "world!"
+paste(text1,text2)
+paste(text1,2,"u",2)
+```
+
+
+## Factors
+Because R and its predecessors were designed in a time when memory was limited, the default behaviour of R is to convert character-type data to *factors*. This is a rather inconvenient, although memory efficient data type that is unintuitive to handle. This is why I recommend you turn factor conversion off at the beginning of all your scripts.
+
+```{r}
+fac_a <- factor(a) # create a factor
+str(fac_a)
+options(stringsAsFactors = FALSE) # Turn automatic factor conversion off
+```
+
+
+## Logical
+Logical data has two possible values: `TRUE` and `FALSE`. They usually arise from logical comparisons.
+
+```{r}
+1 == 1 # is 1 equal to 1?
+1 >= 2 # is 1 equal to or greater than 2?
+a == b # is each of the elements of a equal to those of b?
+logi <- c(TRUE,FALSE) # assign a logical vector
+str(logi) # print the structure of logi
+as.numeric(logi) # logical data can be converted to numeric.
+```
+
+Logical data is useful in subsetting data and as control switches, as we shall later see.
+
+# Vectors, lists, matrices, data frames and arrays.
+
+To do analysis you need a way to arrange data points into larger collections. When deciding what kind of object to store your data in, you mostly need to consider two things:
+
+1. How many dimensions does your data have?
+2. Are all your data of the same type?
+
+\renewcommand{\arraystretch}{1.5}
+\begin{table}[!htp]
+\begin{tabular}{r c c c}
+  & One-dimensional & Two-dimensional & N-dimensional \\
+Data of same type & \texttt{c()} & \texttt{matrix()} & \texttt{array()} \\
+Data of different types  & \texttt{list()} & \texttt{data.frame()} & \texttt{list()} \\
+\end{tabular}
+\caption{A lookup table for choosing the right container class for your data.}
+\label{}
+\end{table}
+
+## Vectors `c()`
+The most basic container is a one-dimensional vector. All members of a vector must be of the same basic type, so that you cannot mix character and numeric data. Singular data points are actually vectors of length one. To create longer vectors, you concatenate them together with the command `c()`. To access specific members of the vector, use square brackets. For example, `x[3]` prints the value of the third member in the vector x.
+
+```{r}
+vec1 <- c("a",2)
+str(vec1) # numeric data was converted to character data
+vec2 <- c("a","3")
+vec3 <- c(vec1,vec2) # combine two vectors
+length(vec3) # vec3 is of length 4
+vec3[3] # the third member of vec3 is "a"
+vec3[1] <- "EKA" # replace the first member of vec3 with the character string "EKA"
+vec3
+```
+
+## Lists `list()`
+Lists are a flexible class of objects that can store data of different types. Each member of a list is itself a list. The practical implication is that instead of using singular square brackets to access the contents of a list, you use double square brackets, e.g. `x[[1]]`. Lists can have an any number of dimensions, and the members of lists do not need to be of the same length.
+
+```{r}
+list1 <- list("a",2)
+str(list1) # both members retained their original types
+str(list1[2]) # members of lists are also lists
+str(list1[[2]]) # double square brackets access the contents of the list
+list2 <- list("b","c", c(3,4,5)) # Lists can hold objects of different lengths
+list2
+list2[[3]][2] # Access the third list member's second value.
+c(list1,list2) # Lists can be concatenated
+```
+
+## Data frames `data.frame()`
+Data frames are the most important container class in R. They are two-dimensional, and thus have rows and columns. All members of one column must be of the same data type, and all columns must be of equal length. Rows of the data frame thus represent individual observations, while columns represent identifiers or measured variables. When creating data frames, you specify names for your variables: `data.frame(variable1=c(1,2),variable2=c("a","b"))`. 
+
+Members of the data frame are accessed with --- surprise, surprise --- square brackets. But because data frames are two-dimensional, you have to specify the dimensions. This is done with a comma `x[1,2]`. The first number refers to rows, and the second to columns. If either number is left blank, then it is taken to mean all data on that dimension. For example, `x[,c(2,3)]` refers to all rows but only the second and third columns of data frame `x`.
+
+You can access specific variables of a data frame by using the `$`-operator: `x$variable1`. This returns a one-dimensional vector, so a comma is no longer needed in further subsetting.
+
+Data frames can be joined together vertically with `rbind()` (bind rows) and horizontally by `cbind()` (bind columns).
+
+```{r}
+## create a new data frame with variables 'name' and 'species'
+creatures <- data.frame(name = c("Frodo","Arwen","Shelob"),
+                        race = c("hobbit", "elf", "spawn of Ungoliant"))
+
+## dividing long expressions on multiple rows helps maintain the readability of your code.
+creatures$legs <- c(2,2,8) # add a new column
+creatures$exists <- FALSE # vectors of length 1 are rotated to fill the column
+creatures
+str(creatures)
+creatures[2,] # second row
+creatures[3,c(3,4)] # third row, third and fourth columns
+creatures$name[3] # third name in the data frame
+str(rbind(creatures,creatures)) # combine data frames
+str(cbind(creatures,creatures))
+names(creatures) # Access the names of your variables
+names(creatures)[2] <- "species" # Biologically more accurate
+```
+
+## Matrices `matrix()`
+Matrices are like data frames, but can only hold data of a single type. Matrices are needed for efficient calculation of large datasets. They are created with the command `matrix()`. Matrices can also be combined with `rbind` and `cbind`.
+
+```{r}
+dada <- 1:12 # some data to fill the matrix
+matrix(dada, ncol = 4) # create a matrix with 4 columns
+matrix(dada, nrow = 3) # create a matrix with 3 rows
+mat <- matrix(dada, nrow = 3, byrow = TRUE) # insert data row-by-row
+mat <- t(mat) # transpose (flip) matrix
+mat
+colnames(mat) <- c("Neo","Morpheus","Trinity") # Name the columns of the matrix
+rbind(mat[,"Trinity"],mat[,3])
+```
+
+## Arrays `array()`
+Arrays are multidimensional matrices. Otherwise they follow the same logic. Subsetting operations for N-dimensional arrays have N-1 commas. 
+
+```{r}
+arr <- array(dada, dim = c(3,2,2)) # array has 3 rows, two columns and two "layers"
+arr
+arr[1,2,] # first row, second column, entire third dimension.
+```
 
 # Attaching packages to gain new functionality
+A major advantage of using R is that its functionality can be increased by installing contributed packages. These are collections of new functions made by programmers and scholars around the worlds. Packages are hosted on a multitude of sites, the most important of which is The **C**omprehensive **R** **A**rchive **N**etwork, or CRAN. By default all you have to do is type `install.packages("package_name")` and *Voilà*, your R installation has just been improved! On this course we will not be installing any packages due to university cybersecurity policies, but try it on your own computer!
 
-# Learning about different data types
+After installation, the package still has to be loaded before its functions become available to the user. For this, use the command `library(package_name)` (no quotes needed).
+
 
 # Running simple calculations in R
 
 # Creating, studying, and manipulating objects
 
 # Where to find help
+NEVER SAVE YOUR WORKSPACE.
+
