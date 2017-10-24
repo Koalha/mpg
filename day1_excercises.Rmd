@@ -24,7 +24,7 @@ To see how this layout works, write these few lines of code into the scripting w
 ## A few lines of code to demonstrate the layout of RStudio
 a <- c(1,2,3,4,5) # assign a vector of values 1 through 5 to an object named a
 b <- 1:5 # same for b
-plot(x=x,y=y) # plot the relationship of a and b
+plot(x=a,y=b) # plot the relationship of a and b
 ```
 
 You execute the code line-by-line with Ctrl+Return. You can also highlight the entire script and execute it with Ctrl+Return. You should see the code being sent to the command line, and a plot similar to above appearing in the graphics window. The above code also demonstrates that there are multiple ways to perform even simple operations. A vector of digits 1–5 can be created both with the commad `1:5` and `c(1,2,3,4,5)`. In addition, the command `seq(from=1,to=5)` would work as well. Just as you can convey the same message in many different ways using natural language, you can achieve the same analysis result with very different lines of code. This flexibility makes the programmatic approach to data analysis very powerful, but also makes it crucial that you arrange and document your code properly.
@@ -55,7 +55,7 @@ We will now go over the most important data types in R: integer, numeric, charac
 
 
 ## Integer and numeric
-We have already created one numeric and one integer object. You can check the type and structure of objects wit the command `str()`
+We have already created one numeric and one integer object. You can check the type and structure of objects with the command `str()`
 
 ```{r}
 str(a) # print the structure of a
@@ -158,7 +158,7 @@ You can access specific variables of a data frame by using the `$`-operator: `x$
 Data frames can be joined together vertically with `rbind()` (bind rows) and horizontally by `cbind()` (bind columns).
 
 ```{r}
-## create a new data frame with variables 'name' and 'species'
+## create a new data frame with variables 'name' and 'race'
 creatures <- data.frame(name = c("Frodo","Arwen","Shelob"),
                         race = c("hobbit", "elf", "spawn of Ungoliant"))
 
@@ -200,14 +200,45 @@ arr[1,2,] # first row, second column, entire third dimension.
 ```
 
 # Attaching packages to gain new functionality
-A major advantage of using R is that its functionality can be increased by installing contributed packages. These are collections of new functions made by programmers and scholars around the worlds. Packages are hosted on a multitude of sites, the most important of which is The **C**omprehensive **R** **A**rchive **N**etwork, or CRAN. By default all you have to do is type `install.packages("package_name")` and *Voilà*, your R installation has just been improved! On this course we will not be installing any packages due to university cybersecurity policies, but try it on your own computer!
+A major advantage of using R is that its functionality can be increased by installing contributed packages. These are collections of new functions made by programmers and scholars around the world. Packages are hosted on a multitude of sites, the most important of which is The **C**omprehensive **R** **A**rchive **N**etwork, or CRAN. By default all you have to do is type `install.packages("package_name")` and *Voilà*, your R installation has just been improved! On this course we will not be installing any packages due to university cybersecurity policies, but try it on your own computer!
 
 After installation, the package still has to be loaded before its functions become available to the user. For this, use the command `library(package_name)` (no quotes needed).
 
+You can also access specific functions from packages by prefixing te function name with the package name followed by two colons: `package::function()`
+
+```{r, eval = 3:5}
+install.packages("boot") # install the package if needed
+logit(0.9) # Throws an error because the function "logit"  is not available.
+library(boot) # load the package "boot"
+logit(0.9) # Logit works!
+boot::logit(0.9) # This would have worked withoud loading the package
+```
 
 # Running simple calculations in R
+R also functions as a calculator with the mathematical operators `+`, `-`, `*`, `/`, `^`, `log()`, `exp()` and `%%` (modulus/jakojäännös). These operations are *vectorized*, meaning that you can perform the calculations on objects with more than one member.
 
-# Creating, studying, and manipulating objects
+```{r}
+a
+a - a
+a + 1
+a / 10
+a ^ a
+log(a)
+exp(log(a))
+a%%4
+a-1*10^2 # R honours the order of operations
+```
+
+A particularily important statistic for a collection of numbers is the mean. There are multiple ways of calcucating it for different types of objects.
+
+```{r}
+mean(creatures$legs)
+sum(creatures$legs)/length(creatures$legs)
+rowMeans(mat)
+colMeans(mat)
+rowSums(mat)/NCOL(mat)
+colSums(mat)/NROW(mat)
+```
 
 # Where to find help
 NEVER SAVE YOUR WORKSPACE.
