@@ -4,3 +4,19 @@
 [Slides](http://htmlpreview.github.com/?https://github.com/Koalha/mpg/blob/master/day1.html)
 
 [Excercises](day1_excercises.pdf)
+
+## Day 2
+
+Slides
+
+[Excercises](day2_excercises.pdf)
+
+## Day 3
+
+Slides
+
+Excercises
+
+## Day 4
+
+Excercises
