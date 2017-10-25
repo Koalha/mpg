@@ -1,0 +1,20 @@
+---
+title: Modelling in Physical Geography
+subtitle: Excercise 3
+author: Konsta Happonen
+output:
+    pdf_document:
+        fig_caption: true
+        highlight: zenburn
+---
+
+# Reading data to R
+
+# Apply-family of functions
+
+# Logical tests and subsetting
+
+# For loops
+
+# Writing/saving data
+

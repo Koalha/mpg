@@ -1,0 +1,9 @@
+---
+title: Modelling in Physical Geography
+subtitle: Excercise 3
+author: Konsta Happonen
+output:
+    pdf_document:
+        fig_caption: true
+        highlight: zenburn
+---

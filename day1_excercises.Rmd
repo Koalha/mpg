@@ -102,6 +102,16 @@ as.numeric(logi) # logical data can be converted to numeric.
 
 Logical data is useful in subsetting data and as control switches, as we shall later see.
 
+## Special (NA,NaN and NULL)
+R has reserved words for missing data (**NA**, Not Available), numeric things that are not numbers (**NaN**, Not a Number), and nothingness (**NULL**). NaN values arise for example when one tries to divide something by zero. Some functions require you to specify what to do to NA- and NaN-values. The null object represents nothingness in the R-world, and can for example be used to delete contents of certain objects.
+
+```{r}
+n <- c(1,NA,NaN,3) # missing data
+sum(n) # arithmetic operations involving NA return NA
+sum(n, na.rm = TRUE) # the argument na.rm = TRUE removes NA- and NaN- values before summing.
+```
+
+
 # Vectors, lists, matrices, data frames and arrays.
 
 To do analysis you need a way to arrange data points into larger collections. When deciding what kind of object to store your data in, you mostly need to consider two things:
@@ -200,7 +210,7 @@ arr[1,2,] # first row, second column, entire third dimension.
 ```
 
 # Attaching packages to gain new functionality
-A major advantage of using R is that its functionality can be increased by installing contributed packages. These are collections of new functions made by programmers and scholars around the world. Packages are hosted on a multitude of sites, the most important of which is The **C**omprehensive **R** **A**rchive **N**etwork, or CRAN. By default all you have to do is type `install.packages("package_name")` and *Voilà*, your R installation has just been improved! On this course we will not be installing any packages due to university cybersecurity policies, but try it on your own computer!
+A major advantage of using R is that its functionality can be increased by installing contributed packages. These are collections of new functions made by programmers and scholars around the world. Packages are hosted on a multitude of sites, the most important of which is The **C**omprehensive **R** **A**rchive **N**etwork, or CRAN. By default all you have to do is type `install.packages("package_name")` and *Voilà*, your R installation has just been improved! In this excercise we will not be installing any packages due to university cybersecurity policies, but try it on your own computer!
 
 After installation, the package still has to be loaded before its functions become available to the user. For this, use the command `library(package_name)` (no quotes needed).
 
@@ -240,6 +250,17 @@ rowSums(mat)/NCOL(mat)
 colSums(mat)/NROW(mat)
 ```
 
+# Removing objects
+Once you are done with an object, you can remove it with `rm()`
+
+```{r}
+rm(mat) # Destroy the matrix
+```
+
 # Where to find help
-NEVER SAVE YOUR WORKSPACE.
+Prefixing a function name with a question mark (`?function_name()`) opens the help page for that function, which describes the functions arguments, return values and usage. Using double question marks (`??search_term`) tries to match your search term to function names and descriptions, which is handy if you are not entirely sure what you are looking for. Google is the best friend of even experienced programmers, look especially for threads on question-answer sites like Stack Overflow. Also remember to ask. Ask your friends, ask your teachers, your supervisors and family. Many data analysis tasks are more about problem-solving and logic than finding the specific function that does what you need.
+
+
+# PS
+When you close your R session, you are prompted to save your workspace. This means that objects you created are saved and available next time you start R. NEVER SAVE YOUR WORKSPACE. The idea of programmatic data-analysis is that you can rerun your scripts to reproduce your results. This cannot be guaranteed if you have rogue objects polluting the workspace. Also, old objects consume memory and can slow down your computer.
 
