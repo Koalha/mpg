@@ -12,7 +12,7 @@ output:
 When doing analysis, it is crucial to get to know one's data. The fastest way to do this is "eyeballing", or visual inspection. Graphical representations of the data can be used to quickly gain information about the variation within and between variables. For this excercise we will be using one of the R default datasets called `brambles`, which contains the locations and age classes of raspberry stems in a square. For more information about the dataset, type `help(brambles)` on the command line.
 
 ```{r}
-data(brambles)
+brambles <- boot::brambles # brambles is provided by the boot package.
 str(brambles)
 ```
 
@@ -112,10 +112,36 @@ dev.off()
 ```
 
 # Important summary statistics
-We have already been introduced to means, medians, and quartiles. We will now take a closer look of **quantiles**, **standard deviations**
+We have already been introduced to means, medians, and quartiles. We will now take a closer look of **quantiles** and **standard deviations**.
+
+## Quantiles
+Quantiles are the break-points when dividing a continuous-valued sample that has been ordered by its value into frequency classes. Quartiles are a special case of quantiles, as are deciles (each class comprises 10% of the samples) and percentiles. Quantiles are calculated with the function `quantile()`. The argument `probs` defines the quantiles you want as fractions (percetage / 100%). For example, quantile(x, probs = 0.1) gets you the value that is bigger than 10% of x. Quantiles are important in statistical significance testing, as we shall later see.
+
+```{r}
+our_sample <- (1:100)^2 # generate some data
+our_sample
+mean(our_sample)
+median(our_sample)
+quantile(our_sample)# the default is to calculate minimum, maximum and quartiles.
+## this range contains 95 % of our sample.
+interval <- quantile(our_sample, p = c(0.025,0.975))
+interval
+
+hist(our_sample)
+abline(v=mean(our_sample), col = "red") # plot the mean with red
+abline(v=interval, col = "blue") # plot the quartiles in blue
+```
+
+## Standard deviation
+Standard deviation is a measure of spread for continuous variables. Sample standard deviation is calculated by dividing the sum of squared deviations from the sample mean by `N-1` and taking the square root (`sqrt()`) of that. Or then by letting R do it for you with the function `sd()`.
+
+```{r}
+sqrt(sum(((our_sample-mean(our_sample))^2))/(length(our_sample)-1))
+sd(our_sample)
+```
 
 # Generating data
-It is surprising how often one needs to generate data. When producing random data, they are usually sampled from some *distribution*. In this excercise we will cover the uniform and normal distributions.
+It is surprising how often one needs to generate data. When producing random data, they are sampled from some *distribution*. In this excercise we will cover the uniform and normal distributions.
 
 
 ## Uniform distribution
@@ -134,7 +160,7 @@ hist(uniform2, breaks = 5) # much closer
 ```
 
 ## Normal distribution
-The normal distribution is one of the most important distributions there is. It's probability distribution is the famous Gauss' bell-shaped curve. The normal distribution is parametrized with a mean and standard deviation parameter. The standard deviation is a *scale parameter*, which defines the variability of sampled values. Random normal deviates are produced with the command `rnorm()`.
+The normal distribution is one of the most important distributions there is. It's probability distribution is the famous Gauss' bell-shaped curve. The normal distribution is parametrized with a mean and standard deviation parameter. The standard deviation is a *scale parameter*, which defines the variability of sampled values. Random normal deviates are produced with the command `rnorm()`. The normal distribution is especially important because of a thing called *the central limit theorem* (CLT). The CLT states that the means of samples taken from a distribution will follow a normal distribution almost irrespective of the shape of the original distribution. CLT is an important part of statistical significance testing, as we shall later see.
 
 ```{r}
 hist(rnorm(1000, mean = 0, sd = 1), xlim = c(-10,10)) # 1000 normal deviates, sd = 1
@@ -142,11 +168,59 @@ hist(rnorm(1000, mean = 0, sd = 2), xlim = c(-10,10)) # same, but sd 2. The dist
 ```
 
 # Scaling variables
+Comparing the distribution of two variables is hard if they are not on the same scale. In this case it can help if you *normalize* or *scale* the variables. Scaling is done by substracting from each member of a sample the sample mean, and then dividing them by the sample standard deviation. The resulting variable will have zero mean and a standard deviation of one. Comparing variables on different scales thus becomes possible. Scaling can be done with the command `scale()`. Be aware, that because standard deviations are sensitive to outliers, scaling is as well. Scaling variables can be important in regression analysis, where it helps in the comparison and calculation of standardized effect sizes.
+
+```{r}
+scaled_b <- scale(brambles) # Scale all variables in brambles
+boxplot(scaled_b) # compare the variables on a common scale
+```
 
 # Sampling
+You can also randomly sample any object you have created in R with the command `sample()`. The main arguments are `x`, the sampled object, `size`, the sample size,  `prob`, a vector of weights if some values are to be drawn more often than others. In addition, the argument `replace` defines whether to sample with or without replacement. Next, We will go through the differences of these two sampling methods.
 
-## ...without replacement
+## Sampling without replacement
+Sampling without replacement is the analogue of picking a piece of candy from a bag and eating it: you cannot eat (sample) the same candy twice. Thus when sampling without replacement, the maximum sample size is the number of candies (or observations or whatever). 
 
-## ...with replacement
+```{r, eval = 1}
+sample(1:10, size = 5, replace = FALSE) # sample without replacement
+sample(1:10, size = 11, replace = FALSE) # error: not enough samples
+```
+
+## Sampling with replacement
+Sampling with replacement on the other hand is comparable to picking a candy from the bag, inspecting it, putting it back again and reshuffling before taking another candy. Because the samples are replaced, there is no upper limit to the sample size. This also means that the same observation could be present in the sample more than once
+
+```{r}
+sample(1:10, size = 5, replace = TRUE)
+sample(1:10, size = 11, replace = TRUE)
+```
 
 # Bootstrap confidence intervals
+Let us look again at the spatial distribution of our raspberry stems. We want to know if there is a spatial trend in their distribution. More specifically, we want to know if the raspberries are evenly distributed from the left to the right, or if there are more raspberries on either side. For this we might investigate the mean of the x-coordinate of our raspberries. Since the possible range is 0–1, the value of the mean should be 0.5 if the raspberries are divided evenly on each side.
+
+```{r}
+hist(brambles$x)
+mean(brambles$x)
+```
+
+The histogram and mean show slightly more raspberries on the right. But is this evidence of a spatial trend? If by trend we mean that the process that generates raspberries has a tendency of generating them more on the right than on the left then no. Samples from a continuous distribution will **never** have exactly the same mean as the distribution they were drawn from (or more specifically, will have the same mean with infinitely samll probability). This is because of sampling error: a finite sample cannot represent the underlying distribution accurately. Small samples will, on average, differ more from the generating distribution. As sample size approaches infinity, sampling error tends to zero.
+
+If we think our sample standard deviation accurately represents the standard deviation of the underlying distribution, and that raspberries are distributed identically and individually in our square, we can use bootstrapping to calculate the sampling distribution of the mean.
+
+Bootstrapping is effectively just sampling with replacement, but doing it many times. For this we can use the R command `replicate()`. The argument `n` specifies how many times we want to replicate the command, and the argument `expr` specifies the command to be replicated. The argument `simplify` tells the command in what form we want the return values from our replicated command. We sample with replacement from the x-coordinates 999 times, and calculate the means of those samples. For each replicate, we set the sample size to the original sample size. We concatenate these samples to the original mean for a total of 1000 samples.
+
+```{r}
+## Bootstapping the mean
+## default sample size for sample() is the original sample size.
+bs <- replicate(n = 999, expr = mean(sample(brambles$x,replace = TRUE)))
+bs <- c(bs, mean(brambles$x))
+```
+
+`bs` now contains the bootstrapped *sampling distribution of the mean*. We can now take quantiles of this distribution to produce *bootstrapped confidence intervals* for the mean x-coordinate of our raspberries. For example, if we want to calculate 95% confidence intervals, we exclude the 2.5% most extreme values from both ends.
+
+```{r}
+confs <- quantile(bs, probs = c(0.025,0.975))
+hist(bs)
+abline(v = confs, lty = 2)
+```
+
+The true mean of the distribution is, with 95% certainty, located somewhere between the dashed lines. The value 0.5 (our *null hypothesis*) is not contained in this interval. We can thus conclude (with 95% certainty) that raspberries have a tendency of being on the right.

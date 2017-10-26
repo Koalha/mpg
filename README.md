@@ -7,7 +7,7 @@
 
 ## Day 2
 
-Slides
+[Slides](http://htmlpreview.github.com/?https://github.com/Koalha/mpg/blob/master/day2.html)
 
 [Excercises](day2_excercises.pdf)
 
@@ -15,7 +15,7 @@ Slides
 
 Slides
 
-Excercises
+[Excercises](day3_excercises.pdf)
 
 ## Day 4
 
