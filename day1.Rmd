@@ -4,19 +4,6 @@ subtitle: Introduction to R scripting - Day 1
 output: ioslides_presentation
 ---
 
-## Course info
-- Course runs from 30.10–30.11.
-- Classes from Monday till Thursday, 12.15–16.00 in computer room Physicum C108
-- Monday–Wednesday: lectures and practicals
-- Thursday: Independent work, teacher present part of the time
-- Project work and Seminar
-- Exam
-
-## Structure of Classes
-### First Week: Basics of R
-### Second Week: Basic statistical methods
-### Third week: Advanced  methods
-
 # Day 1
 
 ## Scripting vs. Point-And-Click
@@ -86,21 +73,3 @@ axis(2,at = c(0,750,1500,2250,3000), las = 2)
 - Attaching packages to gain new functionality
 - Running simple calculations in R
 - Where to find help
-
-# Day 2 
-- How to store data
-- Reading data to R
-- For loops & apply
-- Logical tests
-- if, if else, ifelse
-- Assign functions
-- Means, medians, standard deviations, 
-- Bootstrap confidence estimation
-- Plotting
-- Lines, points, bars, boxplots, histograms, density plots
-- Graphical parameters
-- Exporting graphics
-- Read data to R
-- Augment a data.frame
-- Calculate and present summary statistics
-- Quantify and compare variation

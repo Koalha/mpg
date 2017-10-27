@@ -8,13 +8,152 @@ output:
         highlight: zenburn
 ---
 
+# Preparations
+Make a new directory for this excercise and set it as your working directory. Download the directory called **sentence** from the course moodle page to that directory.
+
 # Reading data to R
+R can read in text-based tables, its own binary file formats, and with the right packages, almost any kind of data (including spreadsheets). For this excercise we will focus on reading data from a text-based format called **CSV** (comma-separated values). The benefit of storing data in plain text is transferability: all software can read plain text. Below is an example table in CSV format; values on the first line are the column names, and the observations are on subsequent lines.
+
+```
+X,Y,Z
+1,2,3
+2,2,1
+3,1,3
+```
+
+The command `read.csv()` transforms CSV files into data frames. The argument `sep` specifies, what the separator between values is. The default value is a comma: `","`. A common problem with people who work on computers set to a Finnish locale is that since the Finnish decimal separator is also a comma, the default behaviour of spreadsheet software when saving data as CSV is to use a semicolon `";"` instead. Check your separators if you ever encounter this error! The same caution applies to decimal separators as well, which are specified with the argument `dec`.
+
+You should have downloaded from the course page a directory with several CSV files. Let us read one of them. The file contains one observation of the variables wordno and word.
+
+```{r}
+options(stringsAsFactors = FALSE)
+read.csv("sentence/word1.csv")
+```
+
+Next, we want to know how many files are in the directory `sentence`. We do this with the command `list.files()`
+
+```{r}
+list.files("sentence")
+```
+
+The directory contains  35 CSV files, each of which contains one word of a sentence. Our task today is to read them all to R, combine them in one data frame, sort the words in correct order and paste them into one character string.
+
+First, we need to convert the 35 files into data frames. You *could* read each file separately into its own object, but that would take forever. Luckily, there is an easier option.
 
 # Apply-family of functions
+The `*apply`-family of functions is large and diverse. The common denominator is that they all take a vector of arguments, and then apply a command to each of those arguments. In this excercise we will use the command `lapply`, whose return value is a list (hence the `l` in the name).
 
-# Logical tests and subsetting
+We first read the file paths into an object. We use the argument to make `list.files()` return the location instead of the name of each file.
 
-# For loops
+```{r}
+paths <- list.files("sentence", full.names = TRUE)
+str(paths)
+```
+
+We then give these file paths to `lapply()` and `read.csv()`. The `FUN` argument to lapply is a function name, so no brackets required. If you needed to specify further arguments to `read.csv()`, you could do after `FUN`. The ellipsis argument lets you pass named arguments on.
+
+```{r}
+## Apply read.csv() to all objects of paths
+words <- lapply(paths, FUN = read.csv)
+head(words,3) # print first three objects
+## the ellipsis is for passing arguments
+## lapply(paths, FUN = read.csv, sep = ",")
+```
+
+We now have a list 35 data frames, and we want to combine them. Recall the command `rbind()` that is used to bind together data frames. We can use it to bind the elements of the list together...
+
+```{r}
+rbind(words[[1]],words[[2]],words[[3]])
+```
+
+...but this is again slow and cumbersome. The command `do.call()` comes to our rescue. `do.call()` takes as its first argument `what` a function, and passes to it the elements of argument `args`, which should be a list. 
+
+```{r}
+words <- do.call(what = rbind, args = words) # combine data frames to one.
+str(words)
+```
+
+The words in the data frame are still scrambled. We can use the command `order` to arrange the data frame acording to the variable `wordno`.
+
+```{r}
+## Think about what the order command does.
+## data.frame(order(words$wordno),words$wordno)
+words <- words[order(words$wordno),] # sort data frame according to wordno
+```
+
+Data frames are not the best for reading long sentences. Print the text to your console with `cat()`
+
+```{r}
+## cat(words$word)
+```
 
 # Writing/saving data
+
+
+# Logical tests
+Logical tests or comparisons are expressions that return either `TRUE` or `FALSE`. The table below lists some logical operators.
+
+\begin{center}
+\begin{tabular}{cl}
+Expression & Meaning \\
+\texttt{x == y} & x is equal to y\\
+\texttt{x != y} & x is not equal to y\\
+\texttt{x > y} & x is greater than y\\
+\texttt{x >= y} & x is greater than or equal to y\\
+\texttt{x < y} & x is smaller than y\\
+\texttt{x <= y} & x is smaller than or equal to y\\
+\texttt{x \%in\% y} & x is a member of the set y\\
+\end{tabular}
+\end{center}
+
+Try them now.
+
+```{r}
+1 == 2
+1 != 2
+1 > 1
+1 >= 1
+1 <= 1
+1 <= 1
+1 %in% 1:5
+1 %in% 2:5
+
+```
+
+
+## Logical expressions and subsetting
+Logical expressions can be used to separate data of interest from a larger data frame. To demonstrate this, we again use the `brambles` dataset. Giving a logical vector as a subsetting argument returns those rows which get the value `TRUE`.
+
+```{r}
+brambles <- boot::brambles
+brambles[FALSE,] # the FALSE value is rotated, returns nothing.
+head(brambles[,c(TRUE,FALSE,TRUE)]) # select the first and third column.
+```
+
+Now, this is not as easy as using integers to directly identify the rows we want. However, we can use logical tests to create logical vectors, so that we can pick certain kinds of observations from our data.
+
+```{r}
+logi <- brambles$x > 0.5 # Which observations have an x-coordinate greater than 0.9?
+str(brambles[logi,]) # return only those observations
+str(brambles[brambles$age %in% c(0,2),]) # Only ages 0 and 2
+```
+
+Logical values can be reversed with the operator `!`.
+
+```{r}
+str(brambles[!brambles$age %in% c(0,2),]) # Only ages that are not 0 or 2
+```
+
+
+# For-loops
+Some times you need to do some operation multiple times, for example to many objects. Sometimes the operation is so complex that simple `*apply` commands do not suffice. An easy-to-understand alternative is the `for`-loop. A demonstration follows:
+
+```{r}
+for (i in 1:6) {
+    cat(" Round", i)
+}
+```
+
+
+# if-else -structures
 
