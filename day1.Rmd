@@ -65,6 +65,12 @@ axis(2,at = c(0,750,1500,2250,3000), las = 2)
 - Free, available on all systems and personal computers
 - Ever expanding ecosystem of general-use and discipline-specific packages
 
+## Objective for first week: get comfortable with R (no modelling) {.smaller}
+```{r}
+library(cowsay)
+say("Good luck!", by = "pumpkin")
+```
+
 ## Exercises today
 - Getting to know R and RStudio
 - Learning about R's data types

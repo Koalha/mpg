@@ -14,13 +14,19 @@ We write our code into the scripting window. When we execute the code, it is sen
 
 \begin{figure}[!htp]
 \includegraphics[width=\textwidth]{scripting_2.png}
-\caption{The RStudio default interface is divided into 4 windows.}
+\caption{The RStudio default interface is divided into 4 windows. If the scripting window is not visible, click the green-white plus sign in the left corner.}
 \label{fig:rstudio}
 \end{figure}
+
+Close any scripts that might open automatically. If a new scripting window is not visible, press the green-white plus-sign in the left corner. Some people have a habit of polluting the working environment by saving objects to te global envoronment. If the environment window lists any objects at all, type this command to the console and run it: `rm(list=ls())`. It deletes all objects.
 
 To see how this layout works, write these few lines of code into the scripting window. DO NOT COPY AND PASTE. Typing is a much more effective way of learning how to code.
 
 ```{r fig.cap = "Output of the command \\texttt{plot}\\label{block1}"}
+### Modelling in Physical Geography
+### Week 1 – excercise 1
+### Learn how to use R
+
 ## A few lines of code to demonstrate the layout of RStudio
 a <- c(1,2,3,4,5) # assign a vector of values 1 through 5 to an object named a
 b <- 1:5 # same for b
@@ -33,6 +39,8 @@ You execute the code line-by-line with Ctrl+Return. You can also highlight the e
 The first thing to learn is that always, ALWAYS comment your scripts. Look at the previous code block. The first row begins with a `#`. This is a sign to the command line not to execute anything on this line. This is called a comment. You can also start a comment mid-line; this is demonstrated on the last three lines.
 
 The aim of commenting is to make the code human-readable. It is much easier to return back to your code when you've written comments that explain what each command is doing. There is no universally accepted right amount of commenting, but too many comments is better than too few. Take a habit of commenting everything you code until you know what each command does by heart.
+
+It is a good idea to use the first few lines of a new script to describe what the script does, in case you forget or if sombody else needs to read your code.
 
 # Anatomy of R commands
 Most R commands are called by writing the function name followed by brackets. If the function takes any *arguments*, they are written between the brackets. For example, in the command `plot(x=a,y=b)`, the objects `a` and `b` are given as arguments to the function `plot()`. To see what arguments a function can take, you can type `?function_name` on the command line, for example `?plot`.
@@ -250,12 +258,14 @@ rowSums(mat)/NCOL(mat)
 colSums(mat)/NROW(mat)
 ```
 
-# Removing objects
+# Removing objects and saving your script
 Once you are done with an object, you can remove it with `rm()`
 
 ```{r}
 rm(mat) # Destroy the matrix
 ```
+
+That concludes the excercises for today. You can then save your script by clicking the save icon. Give it an informative name, like `mpg-excercise1-myname.R`. R scripts always end in the suffix `.R`.
 
 # Where to find help
 Prefixing a function name with a question mark (`?function_name()`) opens the help page for that function, which describes the functions arguments, return values and usage. Using double question marks (`??search_term`) tries to match your search term to function names and descriptions, which is handy if you are not entirely sure what you are looking for. Google is the best friend of even experienced programmers, look especially for threads on question-answer sites like Stack Overflow. Also remember to ask. Ask your friends, ask your teachers, your supervisors and family. Many data analysis tasks are more about problem-solving and logic than finding the specific function that does what you need.
