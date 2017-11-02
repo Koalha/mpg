@@ -89,6 +89,13 @@ Data frames are not the best for reading long sentences. Print the text to your 
 
 # Writing/saving data
 
+We can now save our data. The recommended form for saving tables is CSV with the command `write.csv()`.
+
+```{r}
+## We set row.names to FALSE, because we do not want to save them.
+write.csv(words, file = "words.csv", row.names = FALSE)
+```
+
 
 # Logical tests
 Logical tests or comparisons are expressions that return either `TRUE` or `FALSE`. The table below lists some logical operators.
@@ -103,6 +110,7 @@ Expression & Meaning \\
 \texttt{x < y} & x is smaller than y\\
 \texttt{x <= y} & x is smaller than or equal to y\\
 \texttt{x \%in\% y} & x is a member of the set y\\
+\texttt{is.na(x)} & x is missing data\\
 \end{tabular}
 \end{center}
 
@@ -117,23 +125,25 @@ Try them now.
 1 <= 1
 1 %in% 1:5
 1 %in% 2:5
-
+is.na(1)
+is.na(NA)
 ```
 
+Note that the singular `=` is equal to `<-`, so always remember to use `==`.
 
 ## Logical expressions and subsetting
 Logical expressions can be used to separate data of interest from a larger data frame. To demonstrate this, we again use the `brambles` dataset. Giving a logical vector as a subsetting argument returns those rows which get the value `TRUE`.
 
 ```{r}
 brambles <- boot::brambles
-brambles[FALSE,] # the FALSE value is rotated, returns nothing.
+brambles[FALSE,] # the FALSE value is rotated, returns an empty data frame.
 head(brambles[,c(TRUE,FALSE,TRUE)]) # select the first and third column.
 ```
 
 Now, this is not as easy as using integers to directly identify the rows we want. However, we can use logical tests to create logical vectors, so that we can pick certain kinds of observations from our data.
 
 ```{r}
-logi <- brambles$x > 0.5 # Which observations have an x-coordinate greater than 0.9?
+logi <- brambles$x > 0.5 # Which observations have an x-coordinate greater than 0.5?
 str(brambles[logi,]) # return only those observations
 str(brambles[brambles$age %in% c(0,2),]) # Only ages 0 and 2
 ```
@@ -144,16 +154,158 @@ Logical values can be reversed with the operator `!`.
 str(brambles[!brambles$age %in% c(0,2),]) # Only ages that are not 0 or 2
 ```
 
+Subsetting is a very important skill to master; commit it to heart to avoid much suffering in the future.
 
-# For-loops
-Some times you need to do some operation multiple times, for example to many objects. Sometimes the operation is so complex that simple `*apply` commands do not suffice. An easy-to-understand alternative is the `for`-loop. A demonstration follows:
+# if-else -structures
+
+The words `if` and `else` are used to control the flow of your script. The commands following an `if`-statement are executed only if the argument to `if` returns `TRUE`. Expressions following an `if`-statement are typically wrapped in curly brackets, which signify that the `if` statement applies to all the lines of code between the brackets.
 
 ```{r}
-for (i in 1:6) {
+## Returns 1 if 1 == 2
+if(1 == 2){
+    1 
+}
+
+## Returns 2 if 1 == 1
+if(1 == 1){
+    2
+}
+```
+
+The first expression does not return anything, because one is not equal to two. The argument of the second expression on the other hand evaluates to `TRUE` (because one is indeed one), and so the contents of the curly brackets are evaluated.
+
+The word `else` is a handy way to specify that something should be done if the previous `if`-statement did not get executed.
+
+```{r}
+## If the data set is less than 10 rows, it is small
+## Otherwise it is large
+if(NROW(brambles) < 10){
+    cat("The dataset is small")
+} else {
+    cat("The dataset is large")
+}
+```
+
+You can also bind together several `if`-statements with `else`.
+
+```{r}
+## 0–9 rows: small dataset
+## 10–999 rows: intermediate dataset
+## 1000+ rows: large dataset
+if(NROW(brambles) < 10){
+    cat("The dataset is small")
+} else if(NROW(brambles) < 1000){
+    cat("The dataset is intermediate")
+} else {
+    cat("The dataset is large")
+}
+```
+
+# For-loops
+Sometimes you need to do some operation multiple times, for example to many objects. Sometimes the operation is so complex that simple `*apply` commands do not suffice. An easy-to-understand alternative is the `for`-loop. A demonstration follows:
+
+```{r}
+## Print the number of each iteration of the loop
+for(i in 1:6) {
     cat(" Round", i)
 }
 ```
 
+The `i` in the previous code is an index vector of length one. The loop goes through the values `1:6` one at a time. In each iteration, it executes the expression between the curly brackets but replaces the `i` with one of the members in `1:6`.
 
-# if-else -structures
+The index vector can have any name, and does not need to hold integers.
+
+```{r}
+names <- c("Juha", "Konsta", "Annina", "Miska")
+for(nimi in names){
+    print(paste0(nimi, ", step forward!"))
+}
+```
+
+For-loops are especially useful when combined with if-else statements.
+
+```{r}
+for(i in names){
+    if(i %in% c("Konsta", "Juha")){
+        print("There you are teacher!")
+    } else {
+        print("You are not the teacher today!")
+    }
+}
+```
+
+The additional words `break` and `next` can be used to control the flow of the loop in more detail. The command `break` terminates the loop, while `next` skips the remaining expressions in the current iteration and jumps to the next one.
+
+```{r}
+for(i in names){
+    if(i == "Konsta"){
+        next # skips this iteration
+    } else if(i == "Juha"){
+        print("There you are Juha!")
+    } else if(i == "Annina") {
+        print("There you are Annina!")
+        break
+    } else {
+        print("Hello professor!")
+    }
+}
+```
+
+For-loops can be used the same way as apply commands, although one must remember a few more steps.
+
+First, one must create a container vector for the results of the calculcation. The index vector of the for-loop should be a vector of integers from one to the numer of observations. Then,
+
+```{r}
+## Create the container: a numeric vector with length equaling
+## the number of operations we need to conduct.
+## Here we calculate the mean for each column of brambles
+result <- numeric(NCOL(brambles))
+
+for(i in 1:NCOL(brambles)){
+    result[i] <- mean(brambles[,i])
+}
+
+result
+```
+
+Often for-loops could be replaced with simpler constructs. Compare for example the following statements:
+
+```{r}
+sapply(brambles,mean)
+colMeans(brambles)
+```
+
+None the less, for loops are often useful more complex tasks, and a fundamental programming skill.
+
+
+# Creating your own functions
+
+Sometimes the existing functions of R do not quite do what you would want them to do. Often a handy solution is to define your own functions. Functions are created like all other objects: with the assignment operator. After the arrow, you write `function(arguments)`, where `arguments` are any arguments your function needs to function.
+
+```{r}
+## A simple function definition
+my_function <- function(x) {print(x)}
+my_function(3)
+```
+
+Let us make a function to calculate how far our bramble observations are from the centre of our study plot. The centre coordinate of our study plot was (0.5,0.5), but we include it as an argument so that our function would be more general. We also include a scale parameter, since the coordinates of our data were originally from 9 m $\times$ 9 m squares. This allows us to convert the distances to metres.
+
+```{r}
+away_from_centre <- function(x, y, centre = 0.5, scale = 9){
+    distance <- sqrt((x-centre)^2 + (y-centre)^2)
+    distance <- distance*scale
+    return(distance)
+}
+```
+
+The syntax of a function definition is similar to that of for-loops and if-else statements: the curly brackets delimit which expressions belong to the function. The last expression is the command `return()`. This defines which results are returned when the function is run.
+
+We can now run the function on our `brambles`.
+
+```{r}
+## centre and scale are defined in the function definition
+## We do not need to explicitly set them if we are fine with the defaults
+away <- away_from_centre(x=brambles$x, y = brambles$y)
+hist(away, xlab = "distance from centre (m)") # distribution of distances from the centre
+```
 

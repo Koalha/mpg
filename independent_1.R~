@@ -1,0 +1,20 @@
+### Modelling in Physical Geography
+### Independent assignment 1
+### Complete the script according to instructions
+### and return on Wednesday
+
+
+## Read in data
+
+## Check data types
+
+## Summary with the summary() -function
+
+## Plot barplot of categorical variables
+
+## Plot boxplots of continuous variables
+
+## Plot scatterplot of continuous variables
+
+Traffic
+help(Traffic)

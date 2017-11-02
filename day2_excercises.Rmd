@@ -9,9 +9,11 @@ output:
 ---
 
 # Plotting
-When doing analysis, it is crucial to get to know one's data. The fastest way to do this is "eyeballing", or visual inspection. Graphical representations of the data can be used to quickly gain information about the variation within and between variables. For this excercise we will be using one of the R default datasets called `brambles`, which contains the locations and age classes of raspberry stems in a square. For more information about the dataset, type `help(brambles)` on the command line.
+When doing analysis, it is crucial to get to know one's data. The fastest way to do this is "eyeballing", or visual inspection. Graphical representations of the data can be used to quickly gain information about the variation within and between variables. For this excercise we will be using one of the R default datasets from the `boot` package called `brambles`, which contains the locations and age classes of raspberry stems in a square. For more information about the dataset, type `help(boot::brambles)` on the command line.
 
 ```{r}
+### Modelling in Physical Geography
+### Week 1 – Excercise 2
 brambles <- boot::brambles # brambles is provided by the boot package.
 str(brambles)
 ```
@@ -56,12 +58,12 @@ Often what is truly interesting in the relationship between our variables. To vi
 In scatterplots, the values of two continuous values are mapped on the x- and y-axes. Each data point is represented a point in the plot. If the two variables are a "response" and an "explanatory" variable, the convention is to map the response on the y-axis. The argument `pch` can be used to change the point symbol, and the argument `col` to change the color of the points.
 
 ```{r}
-## Plot the spatia distribution of data with filled circles, colored by age
+## Plot the spatial distribution of data with filled circles, colored by age
 plot(y~x, data = brambles, col = factor(brambles$age), pch = 16) 
 ```
 
 ### Lineplots
-Lineplots are good for displaying trends. The `brambles` data is ill-suited for dempnstrating this, so we will create some trends. We will use the command `seq()` to create regular sequences of data. We specify `type = "l"` in the ploting command to create a line plot. We can then use `lines()` to add another line in the plot. We can also use `abline()` to create 
+Lineplots are good for displaying trends. The `brambles` data is ill-suited for demonstrating this, so we will create some trends. We will use the command `seq()` to create regular sequences of data. We specify `type = "l"` in the ploting command to create a line plot. We can then use `lines()` to add another line in the plot. We can also use `abline()` to create additional, straight lines.
 
 ```{r warning=FALSE}
 x <- seq(from = 1, to = 100) # equal to 1:100
@@ -72,7 +74,7 @@ abline(h = 500, lty = 2) # add a horizontal line with a new linetype
 ```
 
 # Multiple plots in the same window
-You can modify the options of the graphics window to display multiple plots at the same time. You do this with the `par(mfrow = c(rows,columns))` command, replacin `rows` and `columns` with suitable integers. To revert your options, close the graphics window or run the command `par(mfrow = c(1,1))`.
+You can modify the options of the graphics window to display multiple plots at the same time. You do this with the `par(mfrow = c(rows,columns))` command, replacing `rows` and `columns` with suitable integers. To revert your options, close the graphics window or run the command `par(mfrow = c(1,1))`.
 
 ```{r}
 par(mfrow = c(2,2))
@@ -111,6 +113,9 @@ lines(x = c(1,5,9), y = c(7,1,7) , col = "red")
 dev.off()
 ```
 
+The images should have been saved in your working directory. Inspect them now.
+
+
 # Important summary statistics
 We have already been introduced to means, medians, and quartiles. We will now take a closer look of **quantiles** and **standard deviations**.
 
@@ -139,6 +144,8 @@ Standard deviation is a measure of spread for continuous variables. Sample stand
 sqrt(sum(((our_sample-mean(our_sample))^2))/(length(our_sample)-1))
 sd(our_sample)
 ```
+
+For a normally distributed variable, 95% of the values lie within two standard deviations of the mean.
 
 # Generating data
 It is surprising how often one needs to generate data. When producing random data, they are sampled from some *distribution*. In this excercise we will cover the uniform and normal distributions.

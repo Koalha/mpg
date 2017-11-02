@@ -1,0 +1,23 @@
+---
+title: Modelling in Physical Geography
+subtitle: Introduction to R scripting - Day 3
+output: ioslides_presentation
+---
+
+# Automating repetitive tasks
+
+## *apply: apply the same function to many datasets
+
+```{r echo=FALSE, out.width=700}
+knitr::include_graphics("apply.svg")
+```
+
+## Subsetting with logical tests
+```{r echo=FALSE, out.width=500}
+knitr::include_graphics("subsetting.svg")
+```
+
+## For-loops
+```{r echo=FALSE, out.width=700}
+knitr::include_graphics("forloop.svg")
+```
